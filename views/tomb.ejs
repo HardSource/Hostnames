@@ -1,0 +1,42 @@
+<html lang="pt-br">
+<head>
+  <meta charset="utf-8">
+
+  <title>Host Names CESAR</title>
+  <meta name="description" content="CESAR Host Names">
+  <meta name="author" content="wlfj">
+
+    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.2/css/bootstrap.min.css"> <!-- load bootstrap css -->
+	<link rel="stylesheet" href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.min.css"> <!-- load fontawesome -->
+
+
+  <style>
+    body {
+        background-color: linen;
+        padding-top:80px;
+        word-wrap:break-word;
+    }
+    </style>
+
+</head>
+
+<body>
+    <center>
+        <img src="https://upload.wikimedia.org/wikipedia/commons/b/b6/Logo_CESAR.png" width="215" height="137">
+    <h2>HOSTNAME</h2>
+		<%if(finalHostname && finalHostname != 000000){ %>
+            <h1><%= finalHostname[0].cidade %>-<%= finalHostname[0].tombamento %></h1>
+    <% } %>
+        <form class="form-inline" action="/tomb" method="GET">
+          <div class="form-group">
+        <input type="text" class="form-control" name="tombamento" pattern="[0-9]{6}" placeholder="Tombamento"/>
+        </div>
+        <div class="form-group">
+        <button type="submit" class="btn btn-default btn-sm">Buscar</button>
+        </div>
+      </form>
+
+      <a href="/logout" class="btn btn-default btn-sm">Logout</a>
+    </center>
+</body>
+</html>
