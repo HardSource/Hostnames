@@ -11,45 +11,33 @@ module.exports = function(app, passport) {
 	
 	let tombamento = req.query.tombamento;
 	console.log(tombamento);
-		console.log("DEBUG"+01)
 		if(tombamento != '000000' && tombamento != undefined && tombamento != ''){
-			console.log("DEBUG"+02)
 			connection.query("SELECT * FROM main WHERE tombamento='"+tombamento+"'", function(req0, res0){
-				console.log("DEBUG"+03)
 				if(res0 != undefined && res0 != ""){
 					console.log(res0)
 					func.render('tomb', { finalHostname : res0 });
 					valorFinal = res0;
-					console.log("PASS")
-					console.log("DEBUG"+04)
-				}else{console.log("DEBUG"+05)
+				}else{
 					if(res0 == "" && tombamento.toString().length == 6 && tombamento == parseInt(tombamento, 10)){
-						console.log("DEBUG"+06)
 						connection.query("SELECT * FROM main", function(req2, res2){
-							console.log("DEBUG"+07)
 							for(ind in res2){
 								if(res2[ind].tombamento == null){
 									console.log(parseInt(ind)+1)
-									console.log("DEBUG"+08)
 									connection.query("UPDATE main SET tombamento ='"+tombamento+"', usuario ='"+req.user.username+"' WHERE id ="+(parseInt(ind)+1), function(req3, res3){});
-									console.log("DEBUG"+09)
 										connection.query("SELECT * FROM main WHERE tombamento='"+tombamento+"'", function(req4, res4){
 											console.log(res4 + "final");
-											console.log("DEBUG"+10)
 											func.render('tomb', { finalHostname : res4 });
 											valorFinal = res4;
 										});
-										console.log("DEBUG"+12)
 									return;
 								}
 							}
 						});
-					}func.render('tomb', { finalHostname : 000000 });
+					}
 				}
 	
 			});
 		}else{
-			console.log("DEBUG"+11)
 			func.render('tomb', { finalHostname : 000000 });}
 
     });
