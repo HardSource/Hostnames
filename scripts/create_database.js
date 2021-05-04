@@ -19,6 +19,16 @@ CREATE TABLE `' + dbconfig.database + '`.`' + dbconfig.users_table + '` ( \
     UNIQUE INDEX `username_UNIQUE` (`username` ASC) \
 )');
 
+connection.query('\
+CREATE TABLE `main`( \
+    `id` INT UNSIGNED NOT NULL AUTO_INCREMENT, \
+    `tombamento` VARCHAR(20) NOT NULL, \
+    `cidade` VARCHAR(20) NOT NULL, \
+    `usuario` VARCHAR(20) NOT NULL, \
+        PRIMARY KEY (`id`), \
+    UNIQUE INDEX `id_UNIQUE` (`id` ASC), \
+)');
+
 console.log('Success: Database Created!')
 
 connection.end();

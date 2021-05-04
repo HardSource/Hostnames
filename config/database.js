@@ -9,4 +9,3 @@ module.exports = {
 	'database': process.env.connectionDatabase,
     'users_table': process.env.connectionUsers_table
 };
-

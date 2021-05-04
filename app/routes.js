@@ -2,14 +2,18 @@
 var mysql = require('mysql');
 var dbconfig = require('../config/database');
 var connection = mysql.createConnection(dbconfig.connection);
+
+var auth = require('../auth');
+
 connection.query('USE ' + dbconfig.database);
 
 module.exports = function(app, passport) {
 	
 
 	app.get('/tomb', isLoggedIn, (req, func)=>{
-	
 	let tombamento = req.query.tombamento;
+	userPrexfix = auth.userProfile.emails[0].value.toString();
+	userPrexfix = userPrexfix.substring(0, userPrexfix.indexOf("@"))
 	console.log(tombamento);
 		if(tombamento != '000000' && tombamento != undefined && tombamento != ''){
 			connection.query("SELECT * FROM main WHERE tombamento='"+tombamento+"'", function(req0, res0){
@@ -23,7 +27,7 @@ module.exports = function(app, passport) {
 							for(ind in res2){
 								if(res2[ind].tombamento == null){
 									console.log(parseInt(ind)+1)
-									connection.query("UPDATE main SET tombamento ='"+tombamento+"', usuario ='"+req.user.username+"' WHERE id ="+(parseInt(ind)+1), function(req3, res3){});
+									connection.query("UPDATE main SET tombamento ='"+tombamento+"', usuario ='"+userPrexfix+"' WHERE id ="+(parseInt(ind)+1), function(req3, res3){});
 										connection.query("SELECT * FROM main WHERE tombamento='"+tombamento+"'", function(req4, res4){
 											console.log(res4 + "final");
 											func.render('tomb', { finalHostname : res4 });
@@ -49,6 +53,22 @@ module.exports = function(app, passport) {
 		res.render('login.ejs', { message: req.flash('loginMessage') });
 		//res.render('index.ejs'); // load the index.ejs file
 	});
+
+	// =====================================
+	// GOOGLE AUTH					 ========
+	// =====================================
+	app.get('/auth/google',
+		passport.authenticate('google',{scope: ['email', 'profile']})
+	);
+
+	
+
+	app.get('/google/callback',
+		passport.authenticate('google',{
+			successRedirect: '/tomb',
+			failureRedirect: '/',
+		})
+	);
 
 	// =====================================
 	// LOGIN ===============================
@@ -114,7 +134,9 @@ module.exports = function(app, passport) {
 	// LOGOUT ==============================
 	// =====================================
 	app.get('/logout', function(req, res) {
+		console.log(req.user)
 		req.logout();
+		req.session.destroy();
 		res.redirect('/');
 	});
 };
@@ -123,11 +145,11 @@ module.exports = function(app, passport) {
 
 // route middleware to make sure
 function isLoggedIn(req, res, next) {
-
+	req.user ? next() : res.sendStatus(401);
 	// if user is authenticated in the session, carry on
-	if (req.isAuthenticated())
-		return next();
+	//if (req.isAuthenticated())
+	//	return next();
 
 	// if they aren't redirect them to the home page
-	res.redirect('/');
+	//res.redirect('/');
 }
